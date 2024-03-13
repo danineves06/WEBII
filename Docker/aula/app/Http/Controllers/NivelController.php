@@ -4,20 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Eixo;
 use Illuminate\Http\Request;
-use App\Repositories\EixoRepository;
+use App\Repositories\AlunoRepository;
 
-class EixoController extends Controller
+class NivelController extends Controller
 {
 
     protected $repository;
 
     public function __construct(){
-            $this->repository = new EixoRepository();
+            $this->repository = new NivelRepository();
     }
 
     public function index() {
         
-        $data = $this->repository->selectAllWith(['curso']);
+        $data = $this->repository->SelectAll();
         return $data;
     }
 
@@ -31,8 +31,8 @@ class EixoController extends Controller
 
     public function store(Request $request)
     {
-        $obj = new Eixo();
-        $obj->nome = mb_strtoupper($request->email, 'UTF-8');
+        $obj = new Nivel();
+        $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
         $this->repository->save($obj);
         return "<h1>Store - OK!</h1>";
     }
@@ -66,7 +66,7 @@ class EixoController extends Controller
             $this->repository->save($obj);
             return "<h1>Upate - OK!</h1>";
         }
-        return "<h1>Upate - Not found Eixo!</h1>";
+        return "<h1>Upate - Not found Nivel!</h1>";
     }
 
     /**
@@ -78,6 +78,6 @@ class EixoController extends Controller
             return "<h1>Delete - OK!</h1>";
         }
         
-        return "<h1>Delete - Not found Eixo!</h1>";
+        return "<h1>Delete - Not found Nivel!</h1>";
     }
 }
