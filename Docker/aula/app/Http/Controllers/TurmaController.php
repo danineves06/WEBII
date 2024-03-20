@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Aluno;
+use App\Models\Turma;
 use Illuminate\Http\Request;
-use App\Repositories\AlunoRepository;
+use App\Repositories\TurmaRepository;
 use Illuminate\Support\Facades\Hash;
 
-class AlunoController extends Controller
+class TurmaController extends Controller
 {
 
     protected $repository;
 
     public function __construct(){
-            $this->repository = new AlunoRepository();
+            $this->repository = new TurmaRepository();
     }
 
     public function index() {
@@ -35,20 +35,12 @@ class AlunoController extends Controller
 
         
         $objCurso = (new CursoRepository())->findById($request->curso_id);
-        $objTurma = (new TurmaRepository())->findById($request->turma_id);
-        $objUser = (new UserRepository())->findById($request->user_id);
+        
+        if(isset($objCurso)) {
 
-
-        if(isset($objCurso) && isset($objTurma)) {
-
-            $obj = new Aluno();
-            $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
-            $obj->cpf = mb_strtoupper($request->cpf, 'UTF-8');
-            $obj->email = mb_strtolower($request->email, 'UTF-8');
-            $obj->password = Hash::make($request->password);
-            $obj->turma()->associate($objTurma);
+            $obj = new Turma();
+            $obj->ano = $request->ano;
             $obj->curso()->associate($objCurso);
-            $obj->user()->associate($objUser);
             $this->repository->save($obj);
             return "<h1>Store - OK!</h1>";
         }
@@ -78,22 +70,18 @@ class AlunoController extends Controller
     public function update(Request $request, string $id)
     {
         $obj = $this->repository->findById($id);
+       
         $objCurso = (new CursoRepository())->findById($request->curso_id);
-        $objTurma = (new TurmaRepository())->findById($request->turma_id);
-        $objUser = (new UserRepository())->findById($request->user_id);
+        
+        if(isset($obj) && isset($objCurso)) {
 
-        if(isset($obj) && isset($objCurso) && isset($objTurma)) {
-            $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
-            $obj->cpf = mb_strtoupper($request->cpf, 'UTF-8');
-            $obj->email = mb_strtolower($request->email, 'UTF-8');
-            $obj->password = Hash::make($request->password);
-            $obj->turma()->associate($objTurma);
+            $obj = new Turma();
+            $obj->ano = $request->ano;
             $obj->curso()->associate($objCurso);
-            $obj->user()->associate($objUser);
             $this->repository->save($obj);
             return "<h1>Update - OK!</h1>";
         }
-        return "<h1>Update - Not found Aluno!</h1>";
+        return "<h1>Update - Not found Turma!</h1>";
     }
 
     /**

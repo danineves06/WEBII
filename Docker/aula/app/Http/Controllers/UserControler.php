@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Nivel;
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Repositories\AlunoRepository;
+use App\Repositories\UserRepository;
 
-class NivelController extends Controller
+class UserController extends Controller
 {
 
     protected $repository;
 
     public function __construct(){
-            $this->repository = new NivelRepository();
+            $this->repository = new UserRepository();
     }
 
     public function index() {
         
-        $data = $this->repository->SelectAll();
+        $data = $this->repository->selectAll();
         return $data;
     }
 
@@ -31,8 +31,10 @@ class NivelController extends Controller
 
     public function store(Request $request)
     {
-        $obj = new Nivel();
+        $obj = new User();
         $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
+        $obj->email = mb_strtolower($request->email, 'UTF-8');
+        $obj->password = Hash::make($request->password);
         $this->repository->save($obj);
         return "<h1>Store - OK!</h1>";
     }
@@ -63,10 +65,12 @@ class NivelController extends Controller
 
         if(isset($obj)) {
             $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
+            $obj->email = mb_strtolower($request->email, 'UTF-8');
+            $obj->password = Hash::make($request->password);
             $this->repository->save($obj);
             return "<h1>Upate - OK!</h1>";
         }
-        return "<h1>Upate - Not found Nivel!</h1>";
+        return "<h1>Upate - Not found Eixo!</h1>";
     }
 
     /**
@@ -78,6 +82,6 @@ class NivelController extends Controller
             return "<h1>Delete - OK!</h1>";
         }
         
-        return "<h1>Delete - Not found Nivel!</h1>";
+        return "<h1>Delete - Not found Eixo!</h1>";
     }
 }

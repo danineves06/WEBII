@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Categoria extends Model
 {
     use HasFactory;
+
+    public function curso() {
+        return $this->belongsTo('\App\Models\Curso');
+    }
 }

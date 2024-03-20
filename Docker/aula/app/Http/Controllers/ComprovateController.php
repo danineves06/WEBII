@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Aluno;
+use App\Models\Comprovante;
 use Illuminate\Http\Request;
-use App\Repositories\AlunoRepository;
+use App\Repositories\ComprvanteoRepository;
 use Illuminate\Support\Facades\Hash;
 
-class AlunoController extends Controller
+class ComprovanteController extends Controller
 {
 
     protected $repository;
 
     public function __construct(){
-            $this->repository = new AlunoRepository();
+            $this->repository = new ComprovanteRepository();
     }
 
     public function index() {
@@ -34,20 +34,18 @@ class AlunoController extends Controller
     {
 
         
-        $objCurso = (new CursoRepository())->findById($request->curso_id);
-        $objTurma = (new TurmaRepository())->findById($request->turma_id);
+        $objCategoria = (new CategoriaRepository())->findById($request->categoria_id);
+        $objAluno = (new AlunoRepository())->findById($request->aluno_id);
         $objUser = (new UserRepository())->findById($request->user_id);
 
 
-        if(isset($objCurso) && isset($objTurma)) {
+        if(isset($objCategoria) && isset($objAluno)) {
 
-            $obj = new Aluno();
-            $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
-            $obj->cpf = mb_strtoupper($request->cpf, 'UTF-8');
-            $obj->email = mb_strtolower($request->email, 'UTF-8');
-            $obj->password = Hash::make($request->password);
-            $obj->turma()->associate($objTurma);
-            $obj->curso()->associate($objCurso);
+            $obj = new Categoria();
+            $obj->atividade = mb_strtoupper($request->atividade, 'UTF-8');
+            $obj->horas = $request->horas;
+            $obj->categoria()->associate($objCategoria);
+            $obj->aluno()->associate($objAluno);
             $obj->user()->associate($objUser);
             $this->repository->save($obj);
             return "<h1>Store - OK!</h1>";
@@ -78,17 +76,16 @@ class AlunoController extends Controller
     public function update(Request $request, string $id)
     {
         $obj = $this->repository->findById($id);
-        $objCurso = (new CursoRepository())->findById($request->curso_id);
-        $objTurma = (new TurmaRepository())->findById($request->turma_id);
+        $objCategoria = (new CategoriaRepository())->findById($request->categoria_id);
+        $objAluno = (new AlunoRepository())->findById($request->aluno_id);
         $objUser = (new UserRepository())->findById($request->user_id);
 
-        if(isset($obj) && isset($objCurso) && isset($objTurma)) {
-            $obj->nome = mb_strtoupper($request->nome, 'UTF-8');
-            $obj->cpf = mb_strtoupper($request->cpf, 'UTF-8');
-            $obj->email = mb_strtolower($request->email, 'UTF-8');
-            $obj->password = Hash::make($request->password);
-            $obj->turma()->associate($objTurma);
-            $obj->curso()->associate($objCurso);
+
+        if(isset($obj) && isset($objCategoria) && isset($objAluno)) {
+            $obj->atividade = mb_strtoupper($request->atividade, 'UTF-8');
+            $obj->horas = $request->horas;
+            $obj->categoria()->associate($objCategoria);
+            $obj->aluno()->associate($objAluno);
             $obj->user()->associate($objUser);
             $this->repository->save($obj);
             return "<h1>Update - OK!</h1>";
